@@ -9,7 +9,12 @@ import AudioPlayer from "AudioPlayer";
 // Подгружаем Foundation
 require("style!css!foundation-sites/dist/css/foundation.min.css");
 
+require("style!css!sass!styles/app.scss");
+
 const store = configureStore();
+store.subscribe(() => {
+    console.log("State changed ", store.getState());
+});
 
 render(
 

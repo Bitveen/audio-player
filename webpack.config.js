@@ -7,7 +7,11 @@ module.exports = {
     resolve: {
         root: __dirname + "/app",
         alias: {
-            AudioPlayer: "components/AudioPlayer.jsx"
+            AudioPlayer: "components/AudioPlayer.jsx",
+            AudioControls: "components/AudioControls.jsx",
+            Playlist: "components/Playlist.jsx",
+            Song: "components/Song.jsx",
+            reducers: "reducers/reducers.jsx"
         },
         extensions: ["", ".js", ".jsx"]
     },

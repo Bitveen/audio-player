@@ -56,16 +56,21 @@
 
 	var _configureStore = __webpack_require__(216);
 
-	var _AudioPlayer = __webpack_require__(217);
+	var _AudioPlayer = __webpack_require__(218);
 
 	var _AudioPlayer2 = _interopRequireDefault(_AudioPlayer);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	// Подгружаем Foundation
-	__webpack_require__(218);
+	__webpack_require__(222);
+
+	__webpack_require__(226);
 
 	var store = (0, _configureStore.configureStore)();
+	store.subscribe(function () {
+	    console.log("State changed ", store.getState());
+	});
 
 	(0, _reactDom.render)(_react2.default.createElement(
 	    _reactRedux.Provider,
@@ -23722,14 +23727,11 @@
 
 	var _redux = __webpack_require__(189);
 
+	var _reducers = __webpack_require__(217);
+
 	var configureStore = exports.configureStore = function configureStore() {
 	    var reducers = (0, _redux.combineReducers)({
-	        val: function val() {
-	            var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
-	            var action = arguments[1];
-
-	            return state;
-	        }
+	        songs: _reducers.songsReducer
 	    });
 
 	    return (0, _redux.createStore)(reducers);
@@ -23737,6 +23739,61 @@
 
 /***/ },
 /* 217 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var defaultState = [{
+	    id: 1,
+	    title: "Song 1",
+	    duration: 300,
+	    artist: "Artist 1",
+	    isPlayed: false
+	}, {
+	    id: 2,
+	    title: "Song 2",
+	    duration: 300,
+	    artist: "Artist 1",
+	    isPlayed: false
+	}, {
+	    id: 3,
+	    title: "Song 3",
+	    duration: 300,
+	    artist: "Artist 2",
+	    isPlayed: false
+	}, {
+	    id: 4,
+	    title: "Song 4",
+	    duration: 300,
+	    artist: "Artist 2",
+	    isPlayed: false
+	}];
+
+	var songsReducer = exports.songsReducer = function songsReducer() {
+	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : defaultState;
+	    var action = arguments[1];
+
+	    switch (action.type) {
+	        case "PLAY_SONG":
+	            return state.map(function (song) {
+	                if (song.id === action.id) {
+	                    song.isPlayed = true;
+	                } else {
+	                    song.isPlayed = false;
+	                }
+	                return song;
+	            });
+	            break;
+	        default:
+	            return state;
+	    }
+	};
+
+/***/ },
+/* 218 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -23750,6 +23807,14 @@
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
+
+	var _AudioControls = __webpack_require__(219);
+
+	var _AudioControls2 = _interopRequireDefault(_AudioControls);
+
+	var _Playlist = __webpack_require__(220);
+
+	var _Playlist2 = _interopRequireDefault(_Playlist);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -23773,8 +23838,17 @@
 	        value: function render() {
 	            return _react2.default.createElement(
 	                "div",
-	                null,
-	                "Hello world"
+	                { className: "row" },
+	                _react2.default.createElement(
+	                    "div",
+	                    { className: "columns small-centered small-10 medium-8 large-8" },
+	                    _react2.default.createElement(
+	                        "div",
+	                        { className: "callout audio-player" },
+	                        _react2.default.createElement(_AudioControls2.default, null),
+	                        _react2.default.createElement(_Playlist2.default, null)
+	                    )
+	                )
 	            );
 	        }
 	    }]);
@@ -23785,16 +23859,208 @@
 	exports.default = AudioPlayer;
 
 /***/ },
-/* 218 */
+/* 219 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var AudioControls = function (_Component) {
+	    _inherits(AudioControls, _Component);
+
+	    function AudioControls(props) {
+	        _classCallCheck(this, AudioControls);
+
+	        return _possibleConstructorReturn(this, (AudioControls.__proto__ || Object.getPrototypeOf(AudioControls)).call(this, props));
+	    }
+
+	    _createClass(AudioControls, [{
+	        key: "render",
+	        value: function render() {
+	            return _react2.default.createElement(
+	                "div",
+	                { className: "audio-controls" },
+	                _react2.default.createElement(
+	                    "div",
+	                    { className: "audio-controls__controls" },
+	                    _react2.default.createElement(
+	                        "ul",
+	                        { className: "menu" },
+	                        _react2.default.createElement(
+	                            "li",
+	                            null,
+	                            _react2.default.createElement(
+	                                "a",
+	                                { href: "", className: "button" },
+	                                "Prev"
+	                            )
+	                        ),
+	                        _react2.default.createElement(
+	                            "li",
+	                            null,
+	                            _react2.default.createElement(
+	                                "a",
+	                                { href: "", className: "button" },
+	                                "Play"
+	                            )
+	                        ),
+	                        _react2.default.createElement(
+	                            "li",
+	                            null,
+	                            _react2.default.createElement(
+	                                "a",
+	                                { href: "", className: "button" },
+	                                "Next"
+	                            )
+	                        )
+	                    )
+	                )
+	            );
+	        }
+	    }]);
+
+	    return AudioControls;
+	}(_react.Component);
+
+	exports.default = AudioControls;
+
+/***/ },
+/* 220 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(178);
+
+	var _Song = __webpack_require__(221);
+
+	var _Song2 = _interopRequireDefault(_Song);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Playlist = function (_Component) {
+	    _inherits(Playlist, _Component);
+
+	    function Playlist(props) {
+	        _classCallCheck(this, Playlist);
+
+	        return _possibleConstructorReturn(this, (Playlist.__proto__ || Object.getPrototypeOf(Playlist)).call(this, props));
+	    }
+
+	    _createClass(Playlist, [{
+	        key: "render",
+	        value: function render() {
+	            return _react2.default.createElement(
+	                "div",
+	                null,
+	                "Playlist",
+	                _react2.default.createElement(_Song2.default, null),
+	                _react2.default.createElement(_Song2.default, null),
+	                _react2.default.createElement(_Song2.default, null)
+	            );
+	        }
+	    }]);
+
+	    return Playlist;
+	}(_react.Component);
+
+	exports.default = Playlist;
+
+/***/ },
+/* 221 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(178);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Song = function (_Component) {
+	    _inherits(Song, _Component);
+
+	    function Song(props) {
+	        _classCallCheck(this, Song);
+
+	        return _possibleConstructorReturn(this, (Song.__proto__ || Object.getPrototypeOf(Song)).call(this, props));
+	    }
+
+	    _createClass(Song, [{
+	        key: "render",
+	        value: function render() {
+	            return _react2.default.createElement(
+	                "div",
+	                null,
+	                "Song"
+	            );
+	        }
+	    }]);
+
+	    return Song;
+	}(_react.Component);
+
+	exports.default = (0, _reactRedux.connect)()(Song);
+
+/***/ },
+/* 222 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(219);
+	var content = __webpack_require__(223);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(221)(content, {});
+	var update = __webpack_require__(225)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -23811,10 +24077,10 @@
 	}
 
 /***/ },
-/* 219 */
+/* 223 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(220)();
+	exports = module.exports = __webpack_require__(224)();
 	// imports
 
 
@@ -23825,7 +24091,7 @@
 
 
 /***/ },
-/* 220 */
+/* 224 */
 /***/ function(module, exports) {
 
 	/*
@@ -23881,7 +24147,7 @@
 
 
 /***/ },
-/* 221 */
+/* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -24130,6 +24396,46 @@
 		if(oldSrc)
 			URL.revokeObjectURL(oldSrc);
 	}
+
+
+/***/ },
+/* 226 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(227);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(225)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/index.js!./app.scss", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/index.js!./app.scss");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 227 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(224)();
+	// imports
+
+
+	// module
+	exports.push([module.id, ".audio-player {\n  margin-top: 100px; }\n\n.audio-controls {\n  border-bottom: 1px solid #f6f6f6;\n  padding-bottom: 15px; }\n", ""]);
+
+	// exports
 
 
 /***/ }

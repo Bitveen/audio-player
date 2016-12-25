@@ -1,11 +1,10 @@
 import { createStore, combineReducers } from "redux";
 
+import { songsReducer } from "reducers";
 
 export const configureStore = () => {
     let reducers = combineReducers({
-        val: function(state = "", action) {
-            return state;
-        }
+        songs: songsReducer
     });
 
     return createStore(reducers);
